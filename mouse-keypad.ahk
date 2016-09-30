@@ -21,18 +21,45 @@
 ; NumpadMult - Toggle next click (either left, right or middle)
 
 #SingleInstance,Force
-SetWinDelay, 0
 #MaxThreads 1
+SetWinDelay, 0
 
-HotKey, NumpadEnd, startSelectingScreenSegmentWith1
-HotKey, NumpadDown, startSelectingScreenSegmentWith2
-HotKey, NumpadPgDn, startSelectingScreenSegmentWith3
-HotKey, NumpadLeft, startSelectingScreenSegmentWith4
-HotKey, NumpadClear, startSelectingScreenSegmentWith5
-HotKey, NumpadRight, startSelectingScreenSegmentWith6
-HotKey, NumpadHome, startSelectingScreenSegmentWith7
-HotKey, NumpadUp, startSelectingScreenSegmentWith8
-HotKey, NumpadPgUp, startSelectingScreenSegmentWith9
+NumpadEnd::
+  f1() {
+    startSelectingScreenSegment(1)
+  }
+NumpadDown::
+  f2() {
+    startSelectingScreenSegment(2)
+  }
+NumpadPgDn::
+  f3() {
+    startSelectingScreenSegment(3)
+  }
+NumpadLeft::
+  f4() {
+    startSelectingScreenSegment(4)
+  }
+NumpadClear::
+  f5() {
+    startSelectingScreenSegment(5)
+  }
+NumpadRight::
+  f6() {
+    startSelectingScreenSegment(6)
+  }
+NumpadHome::
+  f7() {
+    startSelectingScreenSegment(7)
+  }
+NumpadUp::
+  f8() {
+    startSelectingScreenSegment(8)
+  }
+NumpadPgUp::
+  f9() {
+    startSelectingScreenSegment(9)
+  }
 
 #If !GetKeyState("NumLock","T")
   NumpadIns::LButton
@@ -44,42 +71,13 @@ HotKey, NumpadPgUp, startSelectingScreenSegmentWith9
   NumpadDiv::MButton
 #If
 
-; Because I don't know AutoHotKey that well...
-startSelectingScreenSegmentWith1:
-  startSelectingScreenSegment(1)
-Return
-startSelectingScreenSegmentWith2:
-  startSelectingScreenSegment(2)
-Return
-startSelectingScreenSegmentWith3:
-  startSelectingScreenSegment(3)
-Return
-startSelectingScreenSegmentWith4:
-  startSelectingScreenSegment(4)
-Return
-startSelectingScreenSegmentWith5:
-  startSelectingScreenSegment(5)
-Return
-startSelectingScreenSegmentWith6:
-  startSelectingScreenSegment(6)
-Return
-startSelectingScreenSegmentWith7:
-  startSelectingScreenSegment(7)
-Return
-startSelectingScreenSegmentWith8:
-  startSelectingScreenSegment(8)
-Return
-startSelectingScreenSegmentWith9:
-  startSelectingScreenSegment(9)
-Return
-
 startSelectingScreenSegment(initialSegment) {
   CoordMode, Mouse, Screen
   SysGet, window, Monitor
   window := { bottom: windowBottom, right: windowRight }
 
   searchSpace := { left: 0, top: 0, width: windowRight, height: windowBottom }
-  tolerance := 0.25
+  tolerance := 0.5
 
   searchSpace := trimSearchSpace(searchSpace, initialSegment, tolerance, window)
   drawSelectionGrid(searchSpace)
@@ -93,8 +91,7 @@ startSelectingScreenSegment(initialSegment) {
     {
       Break
     }
-
-    IfInString, ErrorLevel, EndKey:NumpadEnter
+    else IfInString, ErrorLevel, EndKey:NumpadEnter
     {
       moveMouse(searchSpace)
       Break
