@@ -103,7 +103,7 @@ drawBox(guiName, left, top, width, height) {
 
 trimSearchSpace(searchSpace, segment, tolerace, window) {
   left := Floor(searchSpace.left + searchSpace.width / 3 * Mod(segment - 1, 3))
-  top := Floor(searchSpace.top + searchSpace.height / 3 * Floor((10 - segment) / 3))
+  top := Floor(searchSpace.top + searchSpace.height / 3 * Floor((9 - segment) / 3))
   width := Ceil(searchSpace.width / 3)
   height := Ceil(searchSpace.height / 3)
   return {left: left, top: top, width: width, height: height}
