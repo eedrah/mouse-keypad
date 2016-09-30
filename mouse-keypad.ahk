@@ -90,8 +90,8 @@ startSelectingScreenSegment(initialSegment) {
 drawSelectionGrid(gridSpace) {
   Loop, 4 {
     i := A_Index - 1
-    drawBox("x"i, gridSpace.left + Ceil(i * gridSpace.width / 3), gridSpace.top, 1, gridSpace.height)
-    drawBox("y"i, gridSpace.left, gridSpace.top + Ceil(i * gridSpace.height / 3), gridSpace.width, 1)
+    drawBox("x" . i, gridSpace.left + Ceil(i * gridSpace.width / 3), gridSpace.top, 1, gridSpace.height)
+    drawBox("y" . i, gridSpace.left, gridSpace.top + Ceil(i * gridSpace.height / 3), gridSpace.width, 1)
   }
 }
 
