@@ -146,18 +146,35 @@ startSelectingScreenSegment(initialSegment) {
       moveMouse(searchSpace)
       Break
     }
-    else
-      MsgBox %keyPressed%
-
-    if keyPressed in 1,2,3,4,5,6,7,8,9
+    else if keyPressed in 1,2,3,4,5,6,7,8,9
     {
       searchSpace := trimSearchSpace(searchSpace, keyPressed, tolerance, window)
       drawSelectionGrid(searchSpace)
     }
-    ;process other keys
-      ;break
-    ;trimSearchSpace(searchSpace, segment, tolerance, window)
-    ;drawSelectionGrid(searchSpace)
+    else if keyPressed = 0
+    {
+      moveMouse(searchSpace)
+      Click
+      Break
+    }
+    else if keyPressed = .
+    {
+      moveMouse(searchSpace)
+      Click Right
+      Break
+    }
+    else if keyPressed = /
+    {
+      moveMouse(searchSpace)
+      Click Middle
+      Break
+    }
+    else if keyPressed = +
+      Click WheelDown
+    else if keyPressed = -
+      Click WheelUp
+    else
+      Break
   }
   destroySelectionGrid()
 }
