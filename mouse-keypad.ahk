@@ -76,7 +76,6 @@ startSelectingScreenSegmentWith9:
 Return
 
 startSelectingScreenSegment(initialSegment) {
-  MsgBox startSelectingScreenSegment
   CoordMode, Mouse, Screen
   SysGet, window, Monitor
   window := { bottom: windowBottom, right: windowRight }
@@ -85,9 +84,21 @@ startSelectingScreenSegment(initialSegment) {
   tolerance := 0.1666666
 
   searchSpace := trimSearchSpace(searchSpace, initialSegment, tolerance, window)
+  drawSelectionGrid(searchSpace)
+}
 
-  For key, value in searchSpace
-    MsgBox % "Key: " key " value: " value
+drawSelectionGrid(gridSpace) {
+  Loop, 4 {
+    i := A_Index - 1
+    drawBox("x"i, gridSpace.left + Ceil(i * gridSpace.width / 3), gridSpace.top, 1, gridSpace.height)
+    drawBox("y"i, gridSpace.left, gridSpace.top + Ceil(i * gridSpace.height / 3), gridSpace.width, 1)
+  }
+}
+
+drawBox(guiName, left, top, width, height) {
+  Gui, %guiName%: +ToolWindow -Caption +AlwaysOnTop +LastFound
+  Gui, %guiName%: Color, 0000FF
+  Gui, %guiName%: Show, x%left% y%top% w%width% h%height% NoActivate
 }
 
 trimSearchSpace(searchSpace, segment, tolerace, window) {
