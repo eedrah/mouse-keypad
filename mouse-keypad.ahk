@@ -79,7 +79,7 @@ startSelectingScreenSegment(initialSegment) {
   window := { bottom: windowBottom, right: windowRight }
 
   searchSpace := { left: 0, top: 0, width: windowRight, height: windowBottom }
-  tolerance := 0.1666666
+  tolerance := 0.25
 
   searchSpace := trimSearchSpace(searchSpace, initialSegment, tolerance, window)
   drawSelectionGrid(searchSpace)
@@ -91,7 +91,6 @@ startSelectingScreenSegment(initialSegment) {
 
     If ErrorLevel = Timeout
     {
-      MsgBox Timed out
       Break
     }
 
@@ -161,10 +160,35 @@ drawBox(guiName, left, top, width, height) {
   Gui, %guiName%: Show, x%left% y%top% w%width% h%height% NoActivate
 }
 
-trimSearchSpace(searchSpace, segment, tolerace, window) {
+trimSearchSpace(searchSpace, segment, tolerance, window) {
   left := Floor(searchSpace.left + searchSpace.width / 3 * Mod(segment - 1, 3))
   top := Floor(searchSpace.top + searchSpace.height / 3 * Floor((9 - segment) / 3))
   width := Ceil(searchSpace.width / 3)
   height := Ceil(searchSpace.height / 3)
+
+  left := left - Ceil(width * tolerance)
+  width := width + Ceil(width * tolerance * 2)
+  if left < 0
+  {
+    width := width + left
+    left := 0
+  }
+  if left + width > window.right
+  {
+    width := window.right - left
+  }
+
+  top := top - Ceil(height * tolerance)
+  height := height + Ceil(height * tolerance * 2)
+  if top < 0
+  {
+    height := height + top
+    top := 0
+  }
+  if top + height > window.bottom
+  {
+    height := window.bottom - top
+  }
+
   return {left: left, top: top, width: width, height: height}
 }
