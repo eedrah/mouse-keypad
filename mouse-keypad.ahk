@@ -85,6 +85,34 @@ startSelectingScreenSegment(initialSegment) {
 
   searchSpace := trimSearchSpace(searchSpace, initialSegment, tolerance, window)
   drawSelectionGrid(searchSpace)
+
+  Loop {
+    Input, keyPressed, T3, {NumpadEnd}{NumpadDown}{NumpadPgDn}{NumpadLeft}{NumpadClear}{NumpadRight}{NumpadHome}{NumpadUp}{NumpadPgUp}{NumpadIns}{NumpadDel}{NumpadEnter}{NumpadMult}
+
+    If ErrorLevel = Timeout
+    {
+      MsgBox Timed out
+      Break
+    }
+
+    IfInString, ErrorLevel, EndKey:
+    {
+      MsgBox You clicked %ErrorLevel%
+    }
+    ;process other keys
+      ;break
+    ;trimSearchSpace(searchSpace, segment, tolerance, window)
+    ;drawSelectionGrid(searchSpace)
+  }
+  destroySelectionGrid()
+}
+
+destroySelectionGrid() {
+  Loop, 4 {
+    i := A_Index - 1
+    Gui, x%i%: Destroy
+    Gui, y%i%: Destroy
+  }
 }
 
 drawSelectionGrid(gridSpace) {
