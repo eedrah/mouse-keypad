@@ -20,8 +20,6 @@
 ; NumpadDiv - Middle click
 ; NumpadMult - Toggle next click (either left, right or middle)
 
-MsgBox Start initialize
-
 #SingleInstance,Force
 SetWinDelay, 0
 #MaxThreads 1
@@ -46,50 +44,6 @@ HotKey, NumpadPgUp, startSelectingScreenSegmentWith9
   NumpadDiv::MButton
 #If
 
-;/*Monitor:
-;  MsgBox Monitoring
-;  HotKey, NumpadEnd, On
-;  HotKey, NumpadDown, On
-;  HotKey, NumpadPgDn, On
-;  HotKey, NumpadLeft, On
-;  HotKey, NumpadClear, On
-;  HotKey, NumpadRight, On
-;  HotKey, NumpadHome, On
-;  HotKey, NumpadUp, On
-;  HotKey, NumpadPgUp, On
-;
-;  HotKey, NumpadIns, On
-;  HotKey, NumpadDel, On
-;  HotKey, NumpadEnter, On
-;  HotKey, NumpadAdd, On
-;  HotKey, NumpadSub, On
-;  HotKey, NumpadMult, On
-;  HotKey, NumpadDiv, On
-;Return
-;
-;StopMonitoring:
-;  HotKey, NumpadEnd, Off
-;  HotKey, NumpadDown, Off
-;  HotKey, NumpadPgDn, Off
-;  HotKey, NumpadLeft, Off
-;  HotKey, NumpadClear, Off
-;  HotKey, NumpadRight, Off
-;  HotKey, NumpadHome, Off
-;  HotKey, NumpadUp, Off
-;  HotKey, NumpadPgUp, Off
-;
-;  Hotkey, If, !GetKeyState("NumLock","T")
-;    HotKey, NumpadIns, Off
-;
-;    HotKey, NumpadDel, Off
-;    HotKey, NumpadEnter, Off
-;    HotKey, NumpadAdd, Off
-;    HotKey, NumpadSub, Off
-;    HotKey, NumpadMult, Off
-;    HotKey, NumpadDiv, Off
-;
-;Return*/
-;
 ; Because I don't know AutoHotKey that well...
 startSelectingScreenSegmentWith1:
   startSelectingScreenSegment(1)
