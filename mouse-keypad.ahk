@@ -141,9 +141,10 @@ startSelectingScreenSegment(initialSegment) {
       Break
     }
 
-    IfInString, ErrorLevel, EndKey:
+    IfInString, ErrorLevel, EndKey:NumpadEnter
     {
-      MsgBox You clicked %ErrorLevel%
+      moveMouse(searchSpace)
+      Break
     }
     else
       MsgBox %keyPressed%
@@ -159,6 +160,12 @@ startSelectingScreenSegment(initialSegment) {
     ;drawSelectionGrid(searchSpace)
   }
   destroySelectionGrid()
+}
+
+moveMouse(searchSpace) {
+  left := searchSpace.left + Floor(searchSpace.width / 2)
+  top := searchSpace.top + Floor(searchSpace.height / 2)
+  MouseMove, %left%, %top%
 }
 
 destroySelectionGrid() {
