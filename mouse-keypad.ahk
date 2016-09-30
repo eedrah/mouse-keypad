@@ -22,30 +22,74 @@
 
 MsgBox Start initialize
 
-Gosub,MonitorEntry
+#SingleInstance,Force
+SetWinDelay, 0
+#MaxThreads 1
+
+HotKey, NumpadEnd, startSelectingScreenSegmentWith1
+HotKey, NumpadDown, startSelectingScreenSegmentWith2
+HotKey, NumpadPgDn, startSelectingScreenSegmentWith3
+HotKey, NumpadLeft, startSelectingScreenSegmentWith4
+HotKey, NumpadClear, startSelectingScreenSegmentWith5
+HotKey, NumpadRight, startSelectingScreenSegmentWith6
+HotKey, NumpadHome, startSelectingScreenSegmentWith7
+HotKey, NumpadUp, startSelectingScreenSegmentWith8
+HotKey, NumpadPgUp, startSelectingScreenSegmentWith9
 
 #If !GetKeyState("NumLock","T")
-NumpadIns::LButton
-NumpadDel::RButton
-NumpadEnter::Return
-NumpadAdd::WheelDown
-NumpadSub::WheelUp
-NumpadMult::Return ; for now - later, toggle
-NumpadDiv::MButton
+  NumpadIns::LButton
+  NumpadDel::RButton
+  NumpadEnter::Return
+  NumpadAdd::WheelDown
+  NumpadSub::WheelUp
+  NumpadMult::Return ; for now - later, toggle
+  NumpadDiv::MButton
 #If
 
-MonitorEntry:
-  HotKey, NumpadEnd, startSelectingScreenSegmentWith1
-  HotKey, NumpadDown, startSelectingScreenSegmentWith2
-  HotKey, NumpadPgDn, startSelectingScreenSegmentWith3
-  HotKey, NumpadLeft, startSelectingScreenSegmentWith4
-  HotKey, NumpadClear, startSelectingScreenSegmentWith5
-  HotKey, NumpadRight, startSelectingScreenSegmentWith6
-  HotKey, NumpadHome, startSelectingScreenSegmentWith7
-  HotKey, NumpadUp, startSelectingScreenSegmentWith8
-  HotKey, NumpadPgUp, startSelectingScreenSegmentWith9
-Return
-
+;/*Monitor:
+;  MsgBox Monitoring
+;  HotKey, NumpadEnd, On
+;  HotKey, NumpadDown, On
+;  HotKey, NumpadPgDn, On
+;  HotKey, NumpadLeft, On
+;  HotKey, NumpadClear, On
+;  HotKey, NumpadRight, On
+;  HotKey, NumpadHome, On
+;  HotKey, NumpadUp, On
+;  HotKey, NumpadPgUp, On
+;
+;  HotKey, NumpadIns, On
+;  HotKey, NumpadDel, On
+;  HotKey, NumpadEnter, On
+;  HotKey, NumpadAdd, On
+;  HotKey, NumpadSub, On
+;  HotKey, NumpadMult, On
+;  HotKey, NumpadDiv, On
+;Return
+;
+;StopMonitoring:
+;  HotKey, NumpadEnd, Off
+;  HotKey, NumpadDown, Off
+;  HotKey, NumpadPgDn, Off
+;  HotKey, NumpadLeft, Off
+;  HotKey, NumpadClear, Off
+;  HotKey, NumpadRight, Off
+;  HotKey, NumpadHome, Off
+;  HotKey, NumpadUp, Off
+;  HotKey, NumpadPgUp, Off
+;
+;  Hotkey, If, !GetKeyState("NumLock","T")
+;    HotKey, NumpadIns, Off
+;
+;    HotKey, NumpadDel, Off
+;    HotKey, NumpadEnter, Off
+;    HotKey, NumpadAdd, Off
+;    HotKey, NumpadSub, Off
+;    HotKey, NumpadMult, Off
+;    HotKey, NumpadDiv, Off
+;
+;Return*/
+;
 ; Because I don't know AutoHotKey that well...
 startSelectingScreenSegmentWith1:
   startSelectingScreenSegment(1)
@@ -87,7 +131,9 @@ startSelectingScreenSegment(initialSegment) {
   drawSelectionGrid(searchSpace)
 
   Loop {
-    Input, keyPressed, T3, {NumpadEnd}{NumpadDown}{NumpadPgDn}{NumpadLeft}{NumpadClear}{NumpadRight}{NumpadHome}{NumpadUp}{NumpadPgUp}{NumpadIns}{NumpadDel}{NumpadEnter}{NumpadMult}
+    SetNumLockState, On
+    Input, keyPressed, T3 L1, {NumpadEnd}{NumpadDown}{NumpadPgDn}{NumpadLeft}{NumpadClear}{NumpadRight}{NumpadHome}{NumpadUp}{NumpadPgUp}{NumpadIns}{NumpadDel}{NumpadEnter}{NumpadMult},1,2,3,4,5,6,7,8,9,0
+    SetNumLockState, Off
 
     If ErrorLevel = Timeout
     {
@@ -98,6 +144,14 @@ startSelectingScreenSegment(initialSegment) {
     IfInString, ErrorLevel, EndKey:
     {
       MsgBox You clicked %ErrorLevel%
+    }
+    else
+      MsgBox %keyPressed%
+
+    if keyPressed in 1,2,3,4,5,6,7,8,9
+    {
+      searchSpace := trimSearchSpace(searchSpace, keyPressed, tolerance, window)
+      drawSelectionGrid(searchSpace)
     }
     ;process other keys
       ;break
