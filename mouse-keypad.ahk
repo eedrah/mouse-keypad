@@ -20,6 +20,8 @@
 ; NumpadDiv - Middle click
 ; NumpadMult - Toggle next click (either left, right or middle)
 
+global TOLERANCE := 0.2
+
 #SingleInstance,Force
 #MaxThreads 1
 SetWinDelay, 0
@@ -77,9 +79,8 @@ startSelectingScreenSegment(initialSegment) {
   window := { bottom: windowBottom, right: windowRight }
 
   searchSpace := { left: 0, top: 0, width: windowRight, height: windowBottom }
-  tolerance := 0
 
-  searchSpace := trimSearchSpace(searchSpace, initialSegment, tolerance, window)
+  searchSpace := trimSearchSpace(searchSpace, initialSegment, TOLERANCE, window)
   drawSelectionGrid(searchSpace)
 
   Loop {
@@ -98,7 +99,7 @@ startSelectingScreenSegment(initialSegment) {
     }
     else if keyPressed in 1,2,3,4,5,6,7,8,9
     {
-      searchSpace := trimSearchSpace(searchSpace, keyPressed, tolerance, window)
+      searchSpace := trimSearchSpace(searchSpace, keyPressed, TOLERANCE, window)
       drawSelectionGrid(searchSpace)
     }
     else if keyPressed = 0
@@ -167,7 +168,7 @@ drawGrid(gridSpace, depth, guiPrefix) {
   {
     Loop, 9 {
       noBounds := { bottom: 99999999, right: 99999999 }
-      trimmedGridSpace := trimSearchSpace(gridSpace, A_Index, 0, noBounds)
+      trimmedGridSpace := trimSearchSpace(gridSpace, A_Index, TOLERANCE, noBounds)
       drawGrid(trimmedGridSpace, depth - 1, guiPrefix . "_" . A_Index)
     }
   }
