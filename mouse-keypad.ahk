@@ -178,11 +178,11 @@ drawGrid(gridSpace, depth, guiPrefix) {
 drawGridLevel(gridSpace, depth, guiPrefix) {
   if (depth = GRID_DEPTH)
   {
-    color := "0000FF"
+    color := "FF0000"
   }
   else
   {
-    color := "FF0000"
+    color := "0000FF"
   }
   Loop, 4 {
     i := A_Index - 1
