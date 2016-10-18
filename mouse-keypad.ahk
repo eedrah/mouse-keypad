@@ -77,7 +77,7 @@ startSelectingScreenSegment(initialSegment) {
   window := { bottom: windowBottom, right: windowRight }
 
   searchSpace := { left: 0, top: 0, width: windowRight, height: windowBottom }
-  tolerance := 0.5
+  tolerance := 0
 
   searchSpace := trimSearchSpace(searchSpace, initialSegment, tolerance, window)
   drawSelectionGrid(searchSpace)
@@ -136,24 +136,66 @@ moveMouse(searchSpace) {
 }
 
 destroySelectionGrid() {
+  destroyGrid(1, "GUI_0")
+}
+
+destroyGrid(depth, guiPrefix) {
+  destroyGridLevel(guiPrefix)
+  if depth > 0
+  {
+    Loop, 9 {
+      destroyGrid(depth - 1, guiPrefix . "_" . A_Index)
+    }
+  }
+}
+
+destroyGridLevel(guiPrefix) {
   Loop, 4 {
     i := A_Index - 1
-    Gui, x%i%: Destroy
-    Gui, y%i%: Destroy
+    Gui, %guiPrefix%x%i%: Destroy
+    Gui, %guiPrefix%y%i%: Destroy
   }
 }
 
 drawSelectionGrid(gridSpace) {
-  Loop, 4 {
-    i := A_Index - 1
-    drawBox("x" . i, gridSpace.left + Ceil(i * gridSpace.width / 3), gridSpace.top, 1, gridSpace.height)
-    drawBox("y" . i, gridSpace.left, gridSpace.top + Ceil(i * gridSpace.height / 3), gridSpace.width, 1)
+  drawGrid(gridSpace, 1, "GUI_0")
+}
+
+drawGrid(gridSpace, depth, guiPrefix) {
+  drawGridLevel(gridSpace, depth, guiPrefix)
+  if depth > 0
+  {
+    Loop, 9 {
+      noBounds := { bottom: 99999999, right: 99999999 }
+      trimmedGridSpace := trimSearchSpace(gridSpace, A_Index, 0, noBounds)
+      drawGrid(trimmedGridSpace, depth - 1, guiPrefix . "_" . A_Index)
+    }
   }
 }
 
-drawBox(guiName, left, top, width, height) {
+drawGridLevel(gridSpace, depth, guiPrefix) {
+  if depth = 1
+  {
+    color := "0000FF"
+  }
+  else
+  {
+    color := "FF0000"
+  }
+  Loop, 4 {
+    i := A_Index - 1
+    if (depth != 1 && (i = 0 || i = 3))
+    {
+      continue
+    }
+    drawBox(guiPrefix . "x" . i, gridSpace.left + Ceil(i * gridSpace.width / 3), gridSpace.top, 1, gridSpace.height, color)
+    drawBox(guiPrefix . "y" . i, gridSpace.left, gridSpace.top + Ceil(i * gridSpace.height / 3), gridSpace.width, 1, color)
+  }
+}
+
+drawBox(guiName, left, top, width, height, color) {
   Gui, %guiName%: +ToolWindow -Caption +AlwaysOnTop +LastFound
-  Gui, %guiName%: Color, 0000FF
+  Gui, %guiName%: Color, %color%
   Gui, %guiName%: Show, x%left% y%top% w%width% h%height% NoActivate
 }
 
