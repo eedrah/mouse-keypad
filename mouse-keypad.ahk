@@ -21,6 +21,7 @@
 ; NumpadMult - Toggle next click (either left, right or middle)
 
 global TOLERANCE := 0.2
+global GRID_DEPTH := 1
 
 #SingleInstance,Force
 #MaxThreads 1
@@ -137,7 +138,7 @@ moveMouse(searchSpace) {
 }
 
 destroySelectionGrid() {
-  destroyGrid(1, "GUI_0")
+  destroyGrid(GRID_DEPTH, "GUI_0")
 }
 
 destroyGrid(depth, guiPrefix) {
@@ -159,7 +160,7 @@ destroyGridLevel(guiPrefix) {
 }
 
 drawSelectionGrid(gridSpace) {
-  drawGrid(gridSpace, 1, "GUI_0")
+  drawGrid(gridSpace, GRID_DEPTH, "GUI_0")
 }
 
 drawGrid(gridSpace, depth, guiPrefix) {
@@ -175,7 +176,7 @@ drawGrid(gridSpace, depth, guiPrefix) {
 }
 
 drawGridLevel(gridSpace, depth, guiPrefix) {
-  if depth = 1
+  if (depth = GRID_DEPTH)
   {
     color := "0000FF"
   }
@@ -185,7 +186,7 @@ drawGridLevel(gridSpace, depth, guiPrefix) {
   }
   Loop, 4 {
     i := A_Index - 1
-    if (depth != 1 && (i = 0 || i = 3))
+    if (depth != GRID_DEPTH && (i = 0 || i = 3))
     {
       continue
     }
