@@ -20,6 +20,9 @@
 ; NumpadDiv - Middle click
 ; NumpadMult - Toggle next click (either left, right or middle)
 
+global TOLERANCE := 0.2
+global GRID_DEPTH := 1
+
 #SingleInstance,Force
 #MaxThreads 1
 SetWinDelay, 0
@@ -77,9 +80,8 @@ startSelectingScreenSegment(initialSegment) {
   window := { bottom: windowBottom, right: windowRight }
 
   searchSpace := { left: 0, top: 0, width: windowRight, height: windowBottom }
-  tolerance := 0.5
 
-  searchSpace := trimSearchSpace(searchSpace, initialSegment, tolerance, window)
+  searchSpace := trimSearchSpace(searchSpace, initialSegment, TOLERANCE, window)
   drawSelectionGrid(searchSpace)
 
   Loop {
@@ -98,7 +100,7 @@ startSelectingScreenSegment(initialSegment) {
     }
     else if keyPressed in 1,2,3,4,5,6,7,8,9
     {
-      searchSpace := trimSearchSpace(searchSpace, keyPressed, tolerance, window)
+      searchSpace := trimSearchSpace(searchSpace, keyPressed, TOLERANCE, window)
       drawSelectionGrid(searchSpace)
     }
     else if keyPressed = 0
@@ -136,24 +138,66 @@ moveMouse(searchSpace) {
 }
 
 destroySelectionGrid() {
+  destroyGrid(GRID_DEPTH, "GUI_0")
+}
+
+destroyGrid(depth, guiPrefix) {
+  destroyGridLevel(guiPrefix)
+  if depth > 0
+  {
+    Loop, 9 {
+      destroyGrid(depth - 1, guiPrefix . "_" . A_Index)
+    }
+  }
+}
+
+destroyGridLevel(guiPrefix) {
   Loop, 4 {
     i := A_Index - 1
-    Gui, x%i%: Destroy
-    Gui, y%i%: Destroy
+    Gui, %guiPrefix%x%i%: Destroy
+    Gui, %guiPrefix%y%i%: Destroy
   }
 }
 
 drawSelectionGrid(gridSpace) {
-  Loop, 4 {
-    i := A_Index - 1
-    drawBox("x" . i, gridSpace.left + Ceil(i * gridSpace.width / 3), gridSpace.top, 1, gridSpace.height)
-    drawBox("y" . i, gridSpace.left, gridSpace.top + Ceil(i * gridSpace.height / 3), gridSpace.width, 1)
+  drawGrid(gridSpace, GRID_DEPTH, "GUI_0")
+}
+
+drawGrid(gridSpace, depth, guiPrefix) {
+  drawGridLevel(gridSpace, depth, guiPrefix)
+  if depth > 0
+  {
+    Loop, 9 {
+      noBounds := { bottom: 99999999, right: 99999999 }
+      trimmedGridSpace := trimSearchSpace(gridSpace, A_Index, TOLERANCE, noBounds)
+      drawGrid(trimmedGridSpace, depth - 1, guiPrefix . "_" . A_Index)
+    }
   }
 }
 
-drawBox(guiName, left, top, width, height) {
+drawGridLevel(gridSpace, depth, guiPrefix) {
+  if (depth = GRID_DEPTH)
+  {
+    color := "FF0000"
+  }
+  else
+  {
+    color := "0000FF"
+  }
+  Loop, 4 {
+    i := A_Index - 1
+    if (depth != GRID_DEPTH && (i = 0 || i = 3))
+    {
+      continue
+    }
+    drawBox(guiPrefix . "x" . i, gridSpace.left + Ceil(i * gridSpace.width / 3), gridSpace.top, 1, gridSpace.height, color)
+    drawBox(guiPrefix . "y" . i, gridSpace.left, gridSpace.top + Ceil(i * gridSpace.height / 3), gridSpace.width, 1, color)
+  }
+}
+
+drawBox(guiName, left, top, width, height, color) {
   Gui, %guiName%: +ToolWindow -Caption +AlwaysOnTop +LastFound
-  Gui, %guiName%: Color, 0000FF
+  Gui, %guiName%: Color, %color%
   Gui, %guiName%: Show, x%left% y%top% w%width% h%height% NoActivate
 }
 
