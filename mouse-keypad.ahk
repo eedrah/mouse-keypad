@@ -209,12 +209,20 @@ drawBox(guiName, left, top, width, height, color) {
   Gui, %guiName%: Show, x%left% y%top% w%width% h%height% NoActivate
 }
 
+Max(one, two) {
+  return one > two ? one : two
+}
+
 trimSearchSpace(searchSpace, segment, tolerance, window) {
   ; Normal changes - inclusive of half-pixels
   left := Floor(searchSpace.left + searchSpace.width / 3 * Mod(segment - 1, 3))
   top := Floor(searchSpace.top + searchSpace.height / 3 * Floor((9 - segment) / 3))
   width := Ceil(searchSpace.width / 3)
   height := Ceil(searchSpace.height / 3)
+
+  ; Invoke minimum size of 3 pixels
+  width := Max(width, 3)
+  height := Max(height, 3)
 
   ; Incorporate tolerance
   left := left - Ceil(width * tolerance)
