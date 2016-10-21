@@ -210,13 +210,20 @@ drawBox(guiName, left, top, width, height, color) {
 }
 
 trimSearchSpace(searchSpace, segment, tolerance, window) {
+  ; Normal changes - inclusive of half-pixels
   left := Floor(searchSpace.left + searchSpace.width / 3 * Mod(segment - 1, 3))
   top := Floor(searchSpace.top + searchSpace.height / 3 * Floor((9 - segment) / 3))
   width := Ceil(searchSpace.width / 3)
   height := Ceil(searchSpace.height / 3)
 
+  ; Incorporate tolerance
   left := left - Ceil(width * tolerance)
-  width := width + Ceil(width * tolerance * 2)
+  width := width + Ceil(width * tolerance) * 2
+
+  top := top - Ceil(height * tolerance)
+  height := height + Ceil(height * tolerance) * 2
+
+  ; Make sure it's within bounds
   if left < 0
   {
     width := width + left
@@ -226,9 +233,6 @@ trimSearchSpace(searchSpace, segment, tolerance, window) {
   {
     width := window.right - left
   }
-
-  top := top - Ceil(height * tolerance)
-  height := height + Ceil(height * tolerance * 2)
   if top < 0
   {
     height := height + top
