@@ -190,8 +190,16 @@ drawGridLevel(gridSpace, depth, guiPrefix) {
     {
       continue
     }
-    drawBox(guiPrefix . "x" . i, gridSpace.left + Ceil(i * gridSpace.width / 3), gridSpace.top, 1, gridSpace.height, color)
-    drawBox(guiPrefix . "y" . i, gridSpace.left, gridSpace.top + Ceil(i * gridSpace.height / 3), gridSpace.width, 1, color)
+    if (depth = GRID_DEPTH)
+    {
+      thickness := 3
+    }
+    else
+    {
+      thickness := 1
+    }
+    drawBox(guiPrefix . "x" . i, gridSpace.left + Ceil(i * gridSpace.width / 3), gridSpace.top, thickness, gridSpace.height, color)
+    drawBox(guiPrefix . "y" . i, gridSpace.left, gridSpace.top + Ceil(i * gridSpace.height / 3), gridSpace.width, thickness, color)
   }
 }
 
